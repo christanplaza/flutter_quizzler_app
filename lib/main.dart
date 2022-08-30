@@ -45,15 +45,6 @@ class _QuizPageState extends State<QuizPage> {
   int questionNumber = 0;
   int score = 0;
 
-  // Icon(
-  //   Icons.check,
-  //   color: Colors.green,
-  // ),
-  // Icon(
-  //   Icons.close,
-  //   color: Colors.red,
-  // ),
-
   _showQuizResult(context) {
     Alert(
       context: context,
