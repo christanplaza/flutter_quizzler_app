@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 void main() => runApp(Quizzler());
 
@@ -42,6 +43,7 @@ class _QuizPageState extends State<QuizPage> {
   List<bool> answers = [false, false, true, true, true];
 
   int questionNumber = 0;
+  int score = 0;
 
   // Icon(
   //   Icons.check,
@@ -51,6 +53,36 @@ class _QuizPageState extends State<QuizPage> {
   //   Icons.close,
   //   color: Colors.red,
   // ),
+
+  _showQuizResult(context) {
+    Alert(
+      context: context,
+      title: "You've reached the end of the quiz!",
+      desc: "Your total score is $score",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "Try Again",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20.0,
+            ),
+          ),
+          onPressed: () {
+            setState(() {
+              questionNumber = 0;
+              score = 0;
+              scoreTracker = [];
+            });
+            Navigator.pop(context);
+          },
+        ),
+      ],
+      style: AlertStyle(
+        isCloseButton: false,
+      ),
+    ).show();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,15 +118,21 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                bool correctAnswer = answers[questionNumber];
-
-                if (correctAnswer == true) {
-                  print('Correct');
-                } else {
-                  print('wrong');
-                }
                 setState(() {
-                  questionNumber++;
+                  bool correctAnswer = answers[questionNumber];
+                  if (correctAnswer == true) {
+                    scoreTracker.add(Icon(Icons.check, color: Colors.green));
+                    score++;
+                  } else {
+                    scoreTracker.add(Icon(Icons.close, color: Colors.red));
+                  }
+
+                  if (questionNumber == questions.length - 1) {
+                    _showQuizResult(context);
+                    print('end of quiz');
+                  } else {
+                    questionNumber++;
+                  }
                 });
                 // User picked true
               },
@@ -116,17 +154,21 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                bool correctAnswer = answers[questionNumber];
-
-                if (correctAnswer == false) {
-                  print('Correct');
-                } else {
-                  print('wrong');
-                }
-
                 // User picked false
                 setState(() {
-                  questionNumber++;
+                  bool correctAnswer = answers[questionNumber];
+                  if (correctAnswer == false) {
+                    scoreTracker.add(Icon(Icons.check, color: Colors.green));
+                    score++;
+                  } else {
+                    scoreTracker.add(Icon(Icons.close, color: Colors.red));
+                  }
+
+                  if (questionNumber == questions.length - 1) {
+                    _showQuizResult(context);
+                  } else {
+                    questionNumber++;
+                  }
                 });
               },
             ),
